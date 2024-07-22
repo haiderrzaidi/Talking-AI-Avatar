@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <textarea id="input" rows="4" cols="50"></textarea>
+    <button onclick="sendMessage()">Send</button>
+    <div id="response"></div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("input").value.trim();
+            if (!input) return;
+            
+            const response = await fetch('/get', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ msg: input })
+            });
+
+            const data = await response.json();
+            const answer = data.response;
+
+            const responseDiv = document.getElementById("response");
+            responseDiv.innerHTML += `<p><strong>You:</strong> ${input}</p>`;
+            responseDiv.innerHTML += `<p><strong>Bot:</strong> ${answer}</p>`;
+
+            document.getElementById("input").value = "";
+        }
+    </script>
+</body>
+</html>
